@@ -12,15 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-
-function initialsOf(name: string): string {
-  return name
-    .split(' ')
-    .filter((part) => part !== '')
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('')
-}
+import { initialsOf } from '@/lib/initials'
 
 export function UserMenu() {
   const navigate = useNavigate()
