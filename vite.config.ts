@@ -20,7 +20,7 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       '/api': 'http://localhost:8080',
-      '/oauth2': 'http://localhost:8080',
+      '/oauth2/authorization': 'http://localhost:8080',
       '/login/oauth2': 'http://localhost:8080',
       '/ws': { target: 'http://localhost:8080', ws: true },
     },
