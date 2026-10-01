@@ -359,28 +359,37 @@ de alcance. TypeScript strict sin `any`.
 
 ## 8. Diseño visual (spec acordado)
 
-Estética **Trello-like neutro** con acento **azul**, tema **claro + oscuro** con toggle
-persistido, UI en **inglés**, tipografía **Inter** (self-hosted vía `@fontsource-variable/inter`).
+Dirección aprobada en `interfaz.pen` (login/registro, home, board Kanban/Members/Activity,
+detalle de tarea, perfil y board oscuro). Sustituye el look tipo Trello por un **app-shell
+con sidebar**, acento **naranja**, tipografía geométrica y dos temas.
 
-| Elemento       | Definición                                                                                                                                                                       |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Lienzo         | `zinc-100` (light) / `zinc-950` (dark); kanban con scroll horizontal                                                                                                             |
-| Columnas       | `bg-muted` `rounded-xl`, ancho fijo 288px, header con nombre + menú, footer "+ Add task"                                                                                         |
-| Tarjetas       | `bg-card`, `rounded-lg`, `border`, `shadow-sm` → hover `shadow-md`; título + avatar (iniciales) del assignee. **Sin contadores** de subtareas/comentarios (la API no los expone) |
-| Acento         | shadcn `blue`: botones primarios, links, focus ring, indicador Live                                                                                                              |
-| Tema           | clase `.dark` en `<html>`, toggle en el user menu, persistido en `localStorage`                                                                                                  |
-| Navegación     | Home = grid responsive de tableros (1/2/3/4 cols) + topbar; board = kanban fullscreen                                                                                            |
-| Topbar         | Logo, campana con badge de invitaciones PENDING, menú de usuario (tema, logout)                                                                                                  |
-| Estado Live    | dot verde pulsante "Live" / ámbar "Reconnecting" en la toolbar del board                                                                                                         |
-| Modal de tarea | `Dialog` (desktop) / `Sheet` (móvil): título, descripción, assignee picker, subtasks, comentarios                                                                                |
-| Badges         | `PERSONAL` (secondary) / `COLLABORATIVE` (outline azul) en home y toolbar                                                                                                        |
-| Toasts         | `sonner`; errores con `detail` del ProblemDetail; 403/409 tolerantes con refetch                                                                                                 |
-| Estados        | Skeletons en carga; empty states con icono lucide (board sin columnas, columna vacía, sin invitaciones)                                                                          |
-| Auth           | Card centrada sobre fondo neutro; errores de campo inline; botón "Continue with Google"                                                                                          |
+- **Shell**: sidebar fija (workspace, `MAIN MENU`, `MY BOARDS` con dots de color) + topbar
+  con breadcrumb, búsqueda, campana e avatar. Responsive: sidebar como Sheet en móvil.
+- **Paleta clara**: fondo gris cálido `#F2F2F0`, superficie `#FFFFFF`, columna `#ECECE7`,
+  bordes `#E6E6E1`, texto `#1A1A18` / `#6E6E67` / `#9C9C94`.
+- **Paleta oscura**: fondo `#121212`, superficie `#1C1C1C`, columna `#242424`, bordes
+  `#2E2E2E`, texto `#F4F4F2` / `#A8A8A1` / `#8F8F87`.
+- **Acento**: naranja `#F97316` (texto sobre oscuro `#FB923C`, `#C2410C` sobre claro) en
+  primarios, tabs activas, focos y dots. **Verde solo para éxito/Live** (`#16A34A`/`#4ADE80`).
+- **Tipografía**: `Sora` para display/títulos y `Manrope` para UI, self-hosted
+  (`@fontsource-variable/sora`, `@fontsource-variable/manrope`).
+- **Tema**: clase `.dark` en `<html>`, toggle Light/Dark/System en Profile persistido.
+- **Home**: saludo personalizado, botón "New board", banner de invitaciones pendientes (solo
+  si hay), grid de tarjetas con tile de color, badge PERSONAL/COLLABORATIVE y rol.
+- **Board**: header (título, badge, descripción, avatares, Invite, ⋯) + tabs **Kanban /
+  Members / Activity** (Activity solo OWNER). Columnas de 272px con dot, contador y menú;
+  tarjetas con título, descripción, "Edited" y avatar del assignee.
+- **Detalle de tarea**: panel lateral derecho (Sheet) con propiedades (status, assignee,
+  creado, editado), descripción, tabs Subtasks/Comments, progreso derivado de subtareas y
+  composer de comentarios.
+- **Perfil**: datos read-only (la API no permite editarlos), selector de tema y logout.
+- **Invitaciones**: página `/invitations` (recibidas pendientes, aceptar/rechazar) y modal
+  de invitar desde el board (OWNER → ADMIN|MEMBER, ADMIN → MEMBER).
+- **Honestidad con la API**: sin priority/attachments/due date (no existen), sin editar
+  comentarios, sin desasignar tarea, perfil read-only. El indicador **Live** llega en Fase 4.
 
-Componentes shadcn de base: `button input card dialog sheet dropdown-menu avatar badge
-skeleton sonner select textarea checkbox label alert-dialog tooltip popover separator
-scroll-area tabs form`.
+Toasts con sonner; errores con `detail` del ProblemDetail; skeletons y empty states con
+iconos lucide. Componentes shadcn base ya instalados; se añaden los que pida el diseño.
 
 ---
 
