@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router'
 import type { Location } from 'react-router'
 
+import { resolvePostLoginPath } from '@/auth/redirect'
 import { useAuthStore } from '@/auth/store'
 import { FullPageLoader } from '@/components/full-page-loader'
 
@@ -15,7 +16,7 @@ export function GuestRoute() {
 
   if (accessToken !== null) {
     const from = (location.state as { from?: Location } | null)?.from
-    return <Navigate to={from === undefined ? '/' : `${from.pathname}${from.search}`} replace />
+    return <Navigate to={resolvePostLoginPath(from)} replace />
   }
 
   return <Outlet />
