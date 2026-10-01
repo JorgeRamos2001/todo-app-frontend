@@ -1,5 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+
+import { fetchBoardActivities } from '@/api/activities'
 
 import {
   createBoard,
@@ -26,6 +28,17 @@ export function useBoard(boardId: number | null) {
     queryKey: queryKeys.board(boardId ?? -1),
     queryFn: () => fetchBoard(boardId ?? -1),
     enabled: boardId !== null,
+  })
+}
+
+export function useBoardActivities(boardId: number, enabled: boolean) {
+  return useInfiniteQuery({
+    queryKey: queryKeys.boardActivities(boardId),
+    queryFn: ({ pageParam }) => fetchBoardActivities(boardId, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) =>
+      lastPage.page + 1 < lastPage.totalPages ? lastPage.page + 1 : undefined,
+    enabled,
   })
 }
 
