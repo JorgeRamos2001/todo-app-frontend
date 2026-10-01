@@ -5,6 +5,7 @@ import { ThemeProvider } from 'next-themes'
 import { RouterProvider } from 'react-router'
 
 import { restoreSession } from '@/auth/session'
+import { ErrorBoundary } from '@/components/error-boundary'
 import { Toaster } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { queryClient } from '@/lib/query-client'
@@ -18,10 +19,12 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-        <TooltipProvider>
-          <RouterProvider router={router} />
-          <Toaster position="bottom-right" richColors />
-        </TooltipProvider>
+        <ErrorBoundary>
+          <TooltipProvider>
+            <RouterProvider router={router} />
+            <Toaster position="bottom-right" richColors />
+          </TooltipProvider>
+        </ErrorBoundary>
       </ThemeProvider>
     </QueryClientProvider>
   )

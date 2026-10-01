@@ -32,11 +32,11 @@ export const router = createBrowserRouter([
           { path: '/boards/:boardId', element: <BoardDetailPage /> },
           { path: '/invitations', element: <InvitationsPage /> },
           { path: '/profile', element: <ProfilePage /> },
+          { path: '*', element: <NotFoundPage /> },
         ],
       },
       { path: '/invitations/accept', element: <InvitationActionPage mode="accept" /> },
       { path: '/invitations/reject', element: <InvitationActionPage mode="reject" /> },
     ],
   },
-  { path: '*', element: <NotFoundPage /> },
 ])
