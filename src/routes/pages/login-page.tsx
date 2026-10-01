@@ -7,6 +7,7 @@ import type { Location } from 'react-router'
 
 import { ApiError } from '@/api/client'
 import { GoogleButton } from '@/auth/google-button'
+import { resolvePostLoginPath } from '@/auth/redirect'
 import { loginSchema, type LoginValues } from '@/auth/schemas'
 import { useAuth } from '@/auth/use-auth'
 import { Button } from '@/components/ui/button'
@@ -32,7 +33,7 @@ export function LoginPage() {
     try {
       await login(values.email, values.password)
       const from = (location.state as { from?: Location } | null)?.from
-      await navigate(from === undefined ? '/' : `${from.pathname}${from.search}`, { replace: true })
+      await navigate(resolvePostLoginPath(from), { replace: true })
     } catch (error) {
       if (error instanceof ApiError) {
         if (error.status === 400 && error.errors !== undefined) {
