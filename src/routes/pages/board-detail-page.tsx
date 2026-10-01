@@ -29,11 +29,13 @@ import { ErrorState } from '@/components/error-state'
 import { BoardActivityTab } from '@/features/boards/components/board-activity-tab'
 import { BoardFormDialog } from '@/features/boards/components/board-form-dialog'
 import { BoardKanban } from '@/features/boards/components/board-kanban'
+import { BoardLiveIndicator } from '@/features/boards/components/board-live-indicator'
 import { BoardMembersTab } from '@/features/boards/components/board-members-tab'
 import { DeleteBoardDialog } from '@/features/boards/components/delete-board-dialog'
 import { InviteDialog } from '@/features/boards/components/invite-dialog'
 import { TaskPanel } from '@/features/tasks/components/task-panel'
 import { useBoard } from '@/features/boards/hooks'
+import { useBoardRealtime } from '@/realtime/use-board-realtime'
 import { canEditBoard, canManageMembers } from '@/features/boards/permissions'
 import { getErrorMessage } from '@/lib/errors'
 import { initialsOf } from '@/lib/initials'
@@ -86,6 +88,7 @@ export function BoardDetailPage() {
   const parsedBoardId = Number(params.boardId)
   const boardId = Number.isInteger(parsedBoardId) && parsedBoardId > 0 ? parsedBoardId : null
   const boardQuery = useBoard(boardId)
+  const realtimeStatus = useBoardRealtime(boardId)
 
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -188,6 +191,7 @@ export function BoardDetailPage() {
             )}
           </div>
           <div className="flex items-center gap-2">
+            <BoardLiveIndicator status={realtimeStatus} />
             <MemberAvatars members={board.members} />
             {canInvite ? (
               <Button size="sm" onClick={() => setInviteOpen(true)}>
