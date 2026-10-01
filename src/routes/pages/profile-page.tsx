@@ -1,7 +1,9 @@
+import { useState } from 'react'
+
 import { LogOutIcon, MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import { useNavigate } from 'react-router'
 
+import { LogoutDialog } from '@/auth/logout-dialog'
 import { useAuth } from '@/auth/use-auth'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,9 +18,9 @@ const THEME_OPTIONS = [
 ] as const
 
 export function ProfilePage() {
-  const navigate = useNavigate()
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const { theme, setTheme } = useTheme()
+  const [logoutOpen, setLogoutOpen] = useState(false)
   const name = user?.name ?? 'Account'
   const currentTheme = theme ?? 'system'
 
@@ -101,10 +103,7 @@ export function ProfilePage() {
               <Button
                 variant="outline"
                 className="border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive/20"
-                onClick={() => {
-                  logout()
-                  void navigate('/login', { replace: true })
-                }}
+                onClick={() => setLogoutOpen(true)}
               >
                 <LogOutIcon />
                 Log out
@@ -113,6 +112,7 @@ export function ProfilePage() {
           </Card>
         </div>
       </div>
+      <LogoutDialog open={logoutOpen} onOpenChange={setLogoutOpen} />
     </main>
   )
 }

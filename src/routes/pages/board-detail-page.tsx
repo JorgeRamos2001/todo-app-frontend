@@ -27,11 +27,12 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { ErrorState } from '@/components/error-state'
 import { BoardActivityTab } from '@/features/boards/components/board-activity-tab'
-import { BoardColumnsPreview } from '@/features/boards/components/board-columns-preview'
 import { BoardFormDialog } from '@/features/boards/components/board-form-dialog'
+import { BoardKanban } from '@/features/boards/components/board-kanban'
 import { BoardMembersTab } from '@/features/boards/components/board-members-tab'
 import { DeleteBoardDialog } from '@/features/boards/components/delete-board-dialog'
 import { InviteDialog } from '@/features/boards/components/invite-dialog'
+import { TaskPanel } from '@/features/tasks/components/task-panel'
 import { useBoard } from '@/features/boards/hooks'
 import { canEditBoard, canManageMembers } from '@/features/boards/permissions'
 import { getErrorMessage } from '@/lib/errors'
@@ -89,6 +90,7 @@ export function BoardDetailPage() {
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [inviteOpen, setInviteOpen] = useState(false)
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
 
   const tabParam = searchParams.get('tab')
   const tab: BoardTab =
@@ -252,18 +254,43 @@ export function BoardDetailPage() {
 
       {tab === 'kanban' ? (
         <div className="flex-1 overflow-x-auto p-5 sm:p-6">
-          <BoardColumnsPreview columns={board.columns} />
+          <BoardKanban
+            board={board}
+            myRole={myRole}
+            myUserId={user?.id ?? null}
+            onOpenTask={setSelectedTaskId}
+          />
         </div>
       ) : (
         <div className="flex-1 p-5 sm:p-6">
           {tab === 'members' ? (
-            <BoardMembersTab board={board} myRole={myRole} onInvite={() => setInviteOpen(true)} />
+            <BoardMembersTab
+              board={board}
+              myRole={myRole}
+              canInvite={canInvite}
+              onInvite={() => setInviteOpen(true)}
+            />
           ) : (
             <BoardActivityTab boardId={board.id} />
           )}
         </div>
       )}
 
+      {selectedTaskId === null ? null : (
+        <TaskPanel
+          key={selectedTaskId}
+          board={board}
+          taskId={selectedTaskId}
+          myRole={myRole}
+          myUserId={user?.id ?? null}
+          open
+          onOpenChange={(nextOpen) => {
+            if (!nextOpen) {
+              setSelectedTaskId(null)
+            }
+          }}
+        />
+      )}
       <InviteDialog
         boardId={board.id}
         boardTitle={board.title}

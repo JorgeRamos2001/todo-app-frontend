@@ -5,4 +5,6 @@ export const queryKeys = {
   boardInvitations: (boardId: number) => ['boards', boardId, 'invitations'] as const,
   boardActivities: (boardId: number) => ['boards', boardId, 'activities'] as const,
   invitations: ['invitations'] as const,
+  subtasks: (taskId: number) => ['tasks', taskId, 'subtasks'] as const,
+  comments: (taskId: number) => ['tasks', taskId, 'comments'] as const,
 }

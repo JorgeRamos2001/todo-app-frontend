@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils'
 interface BoardMembersTabProps {
   board: BoardDetail
   myRole: BoardRole
+  canInvite: boolean
   onInvite: () => void
 }
 
@@ -36,7 +37,7 @@ const roleBadgeClass: Record<BoardRole, string> = {
   MEMBER: 'bg-secondary text-secondary-foreground',
 }
 
-export function BoardMembersTab({ board, myRole, onInvite }: BoardMembersTabProps) {
+export function BoardMembersTab({ board, myRole, canInvite, onInvite }: BoardMembersTabProps) {
   const [memberToRemove, setMemberToRemove] = useState<BoardMember | null>(null)
   const membersQuery = useQuery({
     queryKey: queryKeys.boardMembers(board.id),
@@ -56,10 +57,12 @@ export function BoardMembersTab({ board, myRole, onInvite }: BoardMembersTabProp
               board.
             </p>
           </div>
-          <Button size="sm" onClick={onInvite}>
-            <UserPlusIcon />
-            Invite people
-          </Button>
+          {canInvite ? (
+            <Button size="sm" onClick={onInvite}>
+              <UserPlusIcon />
+              Invite people
+            </Button>
+          ) : null}
         </div>
         {membersQuery.isPending && membersQuery.data === undefined ? (
           <div className="space-y-3 p-5">

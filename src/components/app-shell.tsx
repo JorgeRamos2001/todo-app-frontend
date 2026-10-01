@@ -17,6 +17,7 @@ import {
 import { useTheme } from 'next-themes'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router'
 
+import { LogoutDialog } from '@/auth/logout-dialog'
 import { useAuth } from '@/auth/use-auth'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -92,8 +93,8 @@ function ThemeMenu() {
 }
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
-  const navigate = useNavigate()
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
+  const [logoutOpen, setLogoutOpen] = useState(false)
   const boardsQuery = useBoards()
   const invitationsQuery = useReceivedInvitations()
   const pendingInvitations = openInvitationCount(invitationsQuery.data ?? [])
@@ -171,16 +172,13 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         <button
           type="button"
           className={cn(rowClass, 'text-muted-foreground hover:bg-accent hover:text-foreground')}
-          onClick={() => {
-            logout()
-            onNavigate?.()
-            void navigate('/login', { replace: true })
-          }}
+          onClick={() => setLogoutOpen(true)}
         >
           <LogOutIcon className="size-4" />
           Log out
         </button>
       </div>
+      <LogoutDialog open={logoutOpen} onOpenChange={setLogoutOpen} />
     </div>
   )
 }
@@ -214,7 +212,8 @@ function BoardSearchInput() {
 function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
   const location = useLocation()
   const navigate = useNavigate()
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
+  const [logoutOpen, setLogoutOpen] = useState(false)
   const boardsQuery = useBoards()
   const invitationsQuery = useReceivedInvitations()
   const pendingInvitations = openInvitationCount(invitationsQuery.data ?? [])
@@ -287,12 +286,7 @@ function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
                 <UserIcon />
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  logout()
-                  void navigate('/login', { replace: true })
-                }}
-              >
+              <DropdownMenuItem onSelect={() => setLogoutOpen(true)}>
                 <LogOutIcon />
                 Log out
               </DropdownMenuItem>
@@ -300,6 +294,7 @@ function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
           </DropdownMenu>
         </div>
       </div>
+      <LogoutDialog open={logoutOpen} onOpenChange={setLogoutOpen} />
     </header>
   )
 }
