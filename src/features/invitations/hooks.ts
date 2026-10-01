@@ -29,11 +29,12 @@ export function useCreateInvitation(boardId: number) {
   })
 }
 
-export function useAcceptInvitation() {
+export function useAcceptInvitation(options: { silentError?: boolean } = {}) {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (token: string) => acceptInvitation(token),
+    meta: options.silentError === true ? { skipErrorToast: true } : undefined,
     onSuccess: async () => {
       toast.success('Invitation accepted')
       await Promise.all([
@@ -44,11 +45,12 @@ export function useAcceptInvitation() {
   })
 }
 
-export function useRejectInvitation() {
+export function useRejectInvitation(options: { silentError?: boolean } = {}) {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (token: string) => rejectInvitation(token),
+    meta: options.silentError === true ? { skipErrorToast: true } : undefined,
     onSuccess: async () => {
       toast.success('Invitation declined')
       await queryClient.invalidateQueries({ queryKey: queryKeys.invitations })
