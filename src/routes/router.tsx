@@ -5,6 +5,7 @@ import { ProtectedRoute } from '@/auth/protected-route'
 import { AppShell } from '@/components/app-shell'
 import { BoardDetailPage } from '@/routes/pages/board-detail-page'
 import { BoardsPage } from '@/routes/pages/boards-page'
+import { InvitationActionPage } from '@/routes/pages/invitation-action-page'
 import { InvitationsPage } from '@/routes/pages/invitations-page'
 import { LoginPage } from '@/routes/pages/login-page'
 import { NotFoundPage } from '@/routes/pages/not-found-page'
@@ -33,6 +34,8 @@ export const router = createBrowserRouter([
           { path: '/profile', element: <ProfilePage /> },
         ],
       },
+      { path: '/invitations/accept', element: <InvitationActionPage mode="accept" /> },
+      { path: '/invitations/reject', element: <InvitationActionPage mode="reject" /> },
     ],
   },
   { path: '*', element: <NotFoundPage /> },
